@@ -185,13 +185,10 @@ class ToSubstraitRel extends AbstractLogicalPlanVisitor with Logging {
   }
 
   override def visitWindow(window: Window): relation.Rel = {
-    val windowExpressions = window.windowExpressions.map {
-      case w: WindowExpression => fromWindowCall(w, window.child.output)
-      case a: Alias if a.child.isInstanceOf[WindowExpression] =>
-        fromWindowCall(a.child.asInstanceOf[WindowExpression], window.child.output)
-      case other =>
-        throw new UnsupportedOperationException(s"Unsupported window expression: $other")
-    }.asJava
+    val windowExpressions = window.windowExpressions
+        .flatMap(expr => expr.collect { case w: WindowExpression => w })
+        .map(fromWindowCall(_, window.child.output))
+      .asJava
 
     val partitionExpressions = window.partitionSpec.map(toExpression(window.child.output)).asJava
     val sorts = window.orderSpec.map(toSortField(window.child.output)).asJava
