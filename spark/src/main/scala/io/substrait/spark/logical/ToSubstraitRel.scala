@@ -145,7 +145,7 @@ class ToSubstraitRel extends AbstractLogicalPlanVisitor with Logging {
     }
     val groupOutputMap = actualGroupExprs.zipWithIndex.map {
       case (e, i) =>
-        AttributeReference(s"group_col_$i", e.dataType)() -> e
+        AttributeReference(s"group_col_$i", e.dataType, nullable = e.nullable)() -> e
     }
     val groupOutput = groupOutputMap.map(_._1)
 
