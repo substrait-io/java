@@ -214,7 +214,7 @@ class ToSubstraitRel extends AbstractLogicalPlanVisitor with Logging {
       builder.count(limit)
     }
 
-      builder.build()
+    builder.build()
   }
 
   override def visitGlobalLimit(p: GlobalLimit): relation.Rel = {
