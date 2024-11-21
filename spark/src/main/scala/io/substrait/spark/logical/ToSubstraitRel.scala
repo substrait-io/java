@@ -186,8 +186,8 @@ class ToSubstraitRel extends AbstractLogicalPlanVisitor with Logging {
 
   override def visitWindow(window: Window): relation.Rel = {
     val windowExpressions = window.windowExpressions
-        .flatMap(expr => expr.collect { case w: WindowExpression => w })
-        .map(fromWindowCall(_, window.child.output))
+      .flatMap(expr => expr.collect { case w: WindowExpression => w })
+      .map(fromWindowCall(_, window.child.output))
       .asJava
 
     val partitionExpressions = window.partitionSpec.map(toExpression(window.child.output)).asJava
